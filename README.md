@@ -34,7 +34,7 @@ make
 make test
 ```
 
-### Android NDK Build and Test 🚀
+### Android NDK Build and Test 🤖
 
 #### Prerequisites
 ```bash
@@ -60,6 +60,39 @@ adb devices
 
 # Clean up device and build files
 ./scripts/build_android_tests.sh clean
+```
+
+### iOS Build and Test 🍎
+
+#### Prerequisites (macOS Required)
+```bash
+# Install Xcode from Mac App Store
+# Install command line tools
+xcode-select --install
+
+# Install CMake (if not already installed)
+brew install cmake
+
+# Verify iOS SDK
+xcrun --sdk iphonesimulator --show-sdk-path
+```
+
+#### Build and Run on iOS
+```bash
+# Build for iOS Simulator and run tests (default)
+./scripts/build_ios_tests.sh
+
+# Build for iOS Simulator (explicit)
+./scripts/build_ios_tests.sh simulator
+
+# Build for iOS Device (requires code signing for testing)
+./scripts/build_ios_tests.sh device
+
+# Build only (without testing)
+./scripts/build_ios_tests.sh build-only
+
+# Clean up build files
+./scripts/build_ios_tests.sh clean
 ```
 
 ### Expected Output
@@ -119,8 +152,9 @@ Interface validated:
 ### Cross-Platform Support 🌍
 - ✅ **Desktop**: Linux, Windows, macOS with CMake
 - ✅ **Android NDK**: Native C++ execution on Android devices
+- ✅ **iOS**: Native C++ execution with iOS Simulator and device support
 - ✅ **Same Codebase**: No platform-specific code modifications required
-- ✅ **Mobile Ready**: Registry pattern perfect for JNI integration
+- ✅ **Mobile Ready**: Registry pattern perfect for JNI/iOS integration
 
 ### Professional Quality 🚀
 - ✅ **Registry Pattern**: Polymorphic object creation with method overloads
@@ -188,37 +222,7 @@ auto classifier = registry.create_model("multiclass", 4, 3);  // 4 inputs, 3 cla
 
 ## Project Structure
 
-```
-assignment/
-├── src/                                    # Source code - modular design
-│   ├── neural_network_interface.h          # Abstract interface definition
-│   ├── model_registry.h/.cpp               # Registry pattern for polymorphic creation
-│   ├── linear_regression.h/.cpp            # Linear regression implementation
-│   ├── logistic_regression.h/.cpp          # Logistic regression implementation
-│   ├── multi_class_classifier.h/.cpp       # Multi-class classifier implementation
-│   └── two_layer_mlp.h/.cpp               # Two-layer MLP implementation
-├── tests/                                  # Test files with doctest framework
-│   ├── test_neural_interface.cpp           # Comprehensive unit tests
-│   ├── doctest.h                          # Lightweight testing framework
-│   └── data/                               # Test data files
-│       ├── linear_regression_demo.txt      # Linear regression test cases
-│       ├── logistic_regression_demo.txt    # Logistic regression test cases
-│       ├── multi_class_demo.txt           # Multi-class classifier test cases
-│       └── two_layer_mlp_demo.txt         # Two-layer MLP test cases
-├── scripts/                               # Build scripts
-│   ├── build_simple_tests.sh             # Desktop build and test script
-│   └── build_android_tests.sh            # Android NDK build and test script
-├── examples/                              # Usage examples
-│   └── neural_example.cpp                # Framework demonstration
-├── build_tests/                           # Desktop build output (auto-created)
-│   └── neural_interface_tests             # Desktop test executable
-├── build_android/                         # Android build output (auto-created)
-│   └── neural_interface_tests             # Android test executable
-└── doc/                                   # Documentation
-    ├── USER_GUIDE.md                      # Comprehensive user guide
-    ├── PROJECT_SUMMARY.md                 # Complete project summary
-    └── ASSIGNMENT_SOLUTION.md             # Assignment solution with Android support
-```
+See [PROJECT_SUMMARY.md](doc/PROJECT_SUMMARY.md) for complete file organization details.
 
 ## Documentation 📚
 
@@ -258,11 +262,21 @@ This implementation **exceeds** all assignment requirements:
 - **Android SDK** with platform-tools (for ADB)
 - **Connected Android device** or emulator for testing
 
-### Environment Setup (Android)
+### iOS Development (macOS Required)
+- **macOS** with Xcode installed from Mac App Store
+- **Xcode Command Line Tools** (`xcode-select --install`)
+- **CMake** (install via `brew install cmake`)
+- **iOS SDK** (included with Xcode)
+- **iOS Simulator** or connected iPhone/iPad for testing
+
+### Environment Setup
 ```bash
-# Required environment variables
+# Android (Windows/WSL)
 export ANDROID_HOME="/path/to/Android/Sdk"
 export ANDROID_NDK_HOME="/path/to/Android/Sdk/ndk/[VERSION]"
+
+# iOS (macOS) - No additional environment variables needed
+# iOS SDK paths are automatically detected via xcrun
 ```
 
 ## Manual Compilation

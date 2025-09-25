@@ -240,7 +240,7 @@ The framework is designed for **cross-platform deployment** supporting both desk
 - **Windows**: Native compilation with MSVC or MinGW
 - **macOS**: Standard Unix-style build process
 
-#### **Android NDK Integration** 🚀
+#### **Android NDK Integration** 🤖
 The framework seamlessly integrates with **Android NDK** for mobile deployment:
 
 ```bash
@@ -254,32 +254,57 @@ cmake .. \
   -DANDROID_PLATFORM=android-21
 ```
 
-**Key Android Features:**
-- ✅ **Native C++ execution** through Android NDK
-- ✅ **Same codebase** runs on desktop and Android
-- ✅ **doctest unit tests** execute directly on Android devices via ADB
-- ✅ **Registry pattern** enables JNI integration for string-based model selection
+#### **iOS Integration** 🍎
+The framework also supports **iOS deployment** with the same CMake approach:
+
+```bash
+# iOS build using existing CMake with iOS toolchain
+./scripts/build_ios_tests.sh
+
+# Leverages existing CMakeLists.txt with iOS toolchain
+cmake .. \
+  -DCMAKE_TOOLCHAIN_FILE=../ios.toolchain.cmake \
+  -DPLATFORM=SIMULATOR \
+  -DDEPLOYMENT_TARGET=12.0
+```
+
+**Key Mobile Features:**
+- ✅ **Native C++ execution** on both Android NDK and iOS
+- ✅ **Same codebase** runs on desktop, Android, and iOS
+- ✅ **doctest unit tests** execute directly on devices via ADB/iOS Simulator
+- ✅ **Registry pattern** enables JNI/iOS integration for string-based model selection
 - ✅ **No code modifications** required - existing framework works unchanged
-- ✅ **Production ready** for Zetic.ai mobile deployment scenarios
+- ✅ **Production ready** for comprehensive mobile ML deployment
 
 ### Mobile Architecture Benefits
 
 The **registry pattern** is particularly well-suited for mobile deployment:
 
-1. **JNI Integration**: Java/Kotlin code can create models via string names:
+1. **Mobile Integration**: Both Android (JNI) and iOS (Objective-C++) can create models via string names:
    ```java
-   // Java side
+   // Android/Java side
    String modelType = "linear";
    float[] result = ZeticML.runInference(modelType, inputData);
-
-   // Maps to C++ registry call
+   ```
+   ```objc
+   // iOS/Objective-C++ side
+   NSString *modelType = @"linear";
+   NSArray *result = [ZeticMLBridge runInference:modelType withInput:inputData];
+   ```
+   ```cpp
+   // Both map to the same C++ registry call
    auto model = registry.create_model("linear", input_size);
    ```
 
 2. **Runtime Model Selection**: Perfect for mobile apps that need to switch between different ML models based on user preferences or device capabilities
 
-3. **Memory Efficiency**: Native C++ execution provides optimal performance on mobile devices
+3. **Memory Efficiency**: Native C++ execution provides optimal performance on both Android and iOS devices
 
-4. **Cross-Platform Testing**: Same test suite validates functionality on both desktop development environment and target mobile devices
+4. **Cross-Platform Testing**: Same test suite validates functionality across desktop, Android, and iOS environments
+   - **Desktop**: Direct CMake execution
+   - **Android**: ADB deployment and execution
+   - **iOS**: iOS Simulator with automatic device management
 
-This cross-platform capability demonstrates how the polymorphic framework design scales from research/development environments to production mobile deployments, making it suitable for real-world ML inference applications.
+5. **Unified Development**: Single codebase supports the entire mobile ecosystem
+
+This comprehensive cross-platform capability demonstrates how the polymorphic framework design scales from research/development environments to production mobile deployments across both major mobile platforms, making it ideal for real-world ML inference applications.

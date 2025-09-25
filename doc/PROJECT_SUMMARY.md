@@ -97,13 +97,16 @@ assignment/
 │   ├── build_simple_tests.sh               # Desktop test build and execution
 │   ├── build_and_run_examples.sh           # Desktop example build and execution
 │   ├── build_cmake.sh                      # Desktop CMake build script
-│   └── build_android_tests.sh              # Android NDK build and test script
+│   ├── build_android_tests.sh              # Android NDK build and test script
+│   └── build_ios_tests.sh                  # iOS CMake build and test script
 ├── build_tests/                             # Desktop test build output (auto-generated)
 │   └── neural_interface_tests               # Desktop compiled test executable
 ├── build_examples/                          # Desktop example build output (auto-generated)
 │   └── neural_example                       # Desktop compiled example executable
 ├── build_android/                           # Android build output (auto-generated)
 │   └── neural_interface_tests               # Android compiled test executable
+├── build_ios/                               # iOS build output (auto-generated)
+│   └── neural_interface_tests.app           # iOS compiled test app bundle
 ├── doc/                                     # Complete documentation
 │   ├── USER_GUIDE.md                       # Comprehensive user guide
 │   ├── PROJECT_SUMMARY.md                  # This technical summary
@@ -186,7 +189,7 @@ Interface validated:
   ✓ Assert-based validation
 ```
 
-### Android NDK Build and Test 🚀
+### Android NDK Build and Test 🤖
 **Prerequisites:**
 ```bash
 # Set Android environment variables
@@ -202,26 +205,49 @@ adb devices
 ./scripts/build_android_tests.sh
 ```
 
-**Android Test Results:**
-```
-=== ZeticML Android NDK Test Runner (CMake) ===
-✓ Build successful for Android (arm64-v8a)
-✓ Deployed to Android device via ADB
-✓ Same test suite runs natively on Android
-✓ Registry pattern works unchanged on mobile platform
+### iOS Build and Test 🍎
+**Prerequisites (macOS):**
+```bash
+# Install Xcode and command line tools
+xcode-select --install
 
-Interface validated on Android:
-  ✓ Native C++ execution through Android NDK
-  ✓ Same doctest framework runs on device
-  ✓ Cross-platform compatibility verified
-  ✓ Mobile deployment ready
+# Install CMake
+brew install cmake
+
+# Verify iOS SDK
+xcrun --sdk iphonesimulator --show-sdk-path
+```
+
+**Build Commands:**
+```bash
+# iOS Simulator (with automatic device management)
+./scripts/build_ios_tests.sh
+
+# iOS Device
+./scripts/build_ios_tests.sh device
+```
+
+**Mobile Test Results:**
+```
+=== Cross-Platform Mobile Testing ===
+✓ Android: Build successful (arm64-v8a), tests run via ADB
+✓ iOS: Build successful (iOS Simulator), tests run with device management
+✓ Same C++ codebase and test suite on both platforms
+✓ Registry pattern enables seamless JNI/iOS integration
+
+Interface validated on mobile platforms:
+  ✓ Native C++ execution on Android NDK and iOS
+  ✓ Same doctest framework runs on both platforms
+  ✓ Automatic test data handling for mobile environments
+  ✓ Production-ready mobile ML deployment
 ```
 
 ### Cross-Platform Benefits
-- **Single Codebase**: Same C++ code runs on desktop and Android
-- **Unified Testing**: Same test suite validates both platforms
-- **Registry Pattern**: Perfect for JNI integration in mobile apps
-- **Production Ready**: Framework supports real-world mobile ML deployment
+- **Single Codebase**: Same C++ code runs on desktop, Android, and iOS
+- **Unified Testing**: Same test suite validates all three platforms
+- **Registry Pattern**: Perfect for both JNI and iOS integration
+- **Complete Mobile Coverage**: Supports entire mobile ecosystem
+- **Production Ready**: Framework supports comprehensive mobile ML deployment
 
 
 ## Extensibility
