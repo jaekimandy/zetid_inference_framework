@@ -228,8 +228,8 @@ See [PROJECT_SUMMARY.md](doc/PROJECT_SUMMARY.md) for complete file organization 
 
 Complete documentation is available in the `/doc` folder:
 
-- **[📋 User Guide](doc/USER_GUIDE.md)** - Comprehensive documentation and usage guide
 - **[📊 Project Summary](doc/PROJECT_SUMMARY.md)** - Complete project overview and technical details
+- **[🎯 Assignment Solution](doc/ASSIGNMENT_SOLUTION.md)** - Assignment solution with cross-platform framework details
 
 ## Assignment Goals Achieved ✅
 
