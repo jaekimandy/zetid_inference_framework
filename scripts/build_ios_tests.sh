@@ -89,9 +89,10 @@ build_with_cmake() {
     echo "Building neural_interface_tests target..."
     make neural_interface_tests -j$(sysctl -n hw.ncpu 2>/dev/null || echo 4)
 
-    if [ -f "$TEST_EXECUTABLE" ]; then
+    # iOS builds create .app bundles, check for the executable inside
+    if [ -f "$TEST_EXECUTABLE.app/$TEST_EXECUTABLE" ]; then
         echo -e "${GREEN}✓ iOS build successful${NC}"
-        echo "Executable: $BUILD_DIR/$TEST_EXECUTABLE"
+        echo "Executable: $BUILD_DIR/$TEST_EXECUTABLE.app/$TEST_EXECUTABLE"
     else
         echo -e "${RED}✗ iOS build failed - executable not found${NC}"
         exit 1
@@ -104,7 +105,11 @@ build_with_cmake() {
 prepare_test_data() {
     echo -e "${YELLOW}Preparing test data for iOS...${NC}"
 
-    # Copy test data to build directory
+    # Copy test data to build directory in the path expected by tests
+    mkdir -p $BUILD_DIR/tests/data 2>/dev/null || true
+    cp -r tests/data/* $BUILD_DIR/tests/data/ 2>/dev/null || true
+
+    # Also copy to root data directory as backup
     cp -r tests/data $BUILD_DIR/ 2>/dev/null || true
 
     echo -e "${GREEN}✓ Test data prepared${NC}"
@@ -115,26 +120,67 @@ run_tests() {
     echo -e "${YELLOW}Running C++ tests for iOS...${NC}"
 
     if [ "$IOS_PLATFORM" = "SIMULATOR" ]; then
-        echo -e "${BLUE}Running on iOS Simulator (can execute directly)${NC}"
+        echo -e "${BLUE}Starting iOS Simulator and running tests...${NC}"
+
+        # Get a suitable simulator device ID (iPhone SE 3rd gen for compatibility)
+        DEVICE_ID=$(xcrun simctl list devices available | grep "iPhone SE (3rd generation)" | head -1 | grep -o '[0-9A-F-]\{36\}')
+
+        if [ -z "$DEVICE_ID" ]; then
+            # Try any available iOS device
+            DEVICE_ID=$(xcrun simctl list devices available | grep "iPhone" | head -1 | grep -o '[0-9A-F-]\{36\}')
+        fi
+
+        if [ -z "$DEVICE_ID" ]; then
+            echo -e "${RED}Error: No available iOS Simulator found${NC}"
+            echo -e "${YELLOW}Available simulators:${NC}"
+            xcrun simctl list devices available | head -20
+            exit 1
+        fi
+
+        echo "Using simulator: $DEVICE_ID"
+
+        # Boot the simulator if not already running
+        echo "Booting iOS Simulator (if not already running)..."
+        xcrun simctl boot "$DEVICE_ID" 2>/dev/null || echo "Simulator already running or boot failed"
+
+        echo -e "${BLUE}=================== Test Output ===================${NC}"
+
+        # Run tests directly on simulator using spawn with timeout
+        cd $BUILD_DIR
+        echo -e "${BLUE}Running tests on iOS Simulator...${NC}"
+
+        # iOS-specific: Copy test data to simulator working directory
+        # The tests expect files at ../tests/data/ but iOS Simulator runs in a different directory
+        SIMULATOR_DATA_DIR="/Users/jaekim/Library/Developer/CoreSimulator/Devices/$DEVICE_ID/data"
+        if [ -d "$SIMULATOR_DATA_DIR" ]; then
+            echo "Setting up test data for iOS Simulator..."
+            # Create the exact directory structure the tests expect: ../tests/data/
+            mkdir -p "$SIMULATOR_DATA_DIR/../tests/data"
+            cp ../tests/data/*.txt "$SIMULATOR_DATA_DIR/../tests/data/" 2>/dev/null || true
+        fi
+
+        # Run tests on simulator
+        if xcrun simctl spawn "$DEVICE_ID" "$PWD/$TEST_EXECUTABLE.app/$TEST_EXECUTABLE" 2>&1; then
+            echo -e "${BLUE}==================================================${NC}"
+            echo -e "${GREEN}✅ iOS C++ tests completed successfully on simulator!${NC}"
+            success=true
+        else
+            echo -e "${BLUE}==================================================${NC}"
+            echo -e "${RED}❌ iOS tests failed or timed out on simulator${NC}"
+            success=false
+        fi
+
+        cd ..
+
+        if [ "$success" != "true" ]; then
+            exit 1
+        fi
     else
-        echo -e "${YELLOW}Built for iOS Device (would need device deployment)${NC}"
-        echo -e "${YELLOW}For device testing, you would need to deploy via Xcode${NC}"
-        return 0
+        echo -e "${YELLOW}Built for iOS Device${NC}"
+        echo -e "${YELLOW}For device testing, deploy via Xcode with proper code signing${NC}"
+        echo -e "${GREEN}✅ iOS C++ build completed successfully!${NC}"
+        echo -e "${BLUE}Executable ready at: $BUILD_DIR/$TEST_EXECUTABLE.app/$TEST_EXECUTABLE${NC}"
     fi
-
-    echo -e "${BLUE}=================== Test Output ===================${NC}"
-
-    # Run tests (only works for iOS Simulator)
-    if cd $BUILD_DIR && ./$TEST_EXECUTABLE; then
-        echo -e "${BLUE}==================================================${NC}"
-        echo -e "${GREEN}✅ All iOS C++ tests completed successfully!${NC}"
-    else
-        echo -e "${BLUE}==================================================${NC}"
-        echo -e "${RED}❌ Some tests failed${NC}"
-        exit 1
-    fi
-
-    cd ..
 }
 
 # Function to cleanup

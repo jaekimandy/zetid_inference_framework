@@ -59,6 +59,4 @@ set(CMAKE_CXX_FLAGS_INIT "")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -isysroot ${CMAKE_OSX_SYSROOT}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -isysroot ${CMAKE_OSX_SYSROOT}")
 
-# Disable bitcode for simplicity
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fembed-bitcode-marker")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fembed-bitcode-marker")
+# Bitcode is deprecated and no longer needed in modern iOS versions
