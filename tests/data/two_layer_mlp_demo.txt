@@ -1,0 +1,16 @@
+# Two-Layer MLP Demo Data
+# Configuration: 2 inputs, 3 hidden units, 2 outputs
+# Format: input1,input2 | W1_weights(6),b1_biases(3),W2_weights(6),b2_biases(2) | expected_output1,expected_output2
+# Parameter order: [W1: i0->h0,i0->h1,i0->h2,i1->h0,i1->h1,i1->h2, b1: h0,h1,h2, W2: h0->o0,h0->o1,h1->o0,h1->o1,h2->o0,h2->o1, b2: o0,o1]
+
+# Test case 1: All weights = 0.1, all biases = 0.1
+# Input [1,2] -> Hidden [0.5,0.5,0.5] (after ReLU) -> Output [0.25,0.25]
+1.0,2.0 | 0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1 | 0.25,0.25
+
+# Test case 2: Simple identity-like mapping
+# Input [1,0] -> specific weights to get [0.5,1.0]
+1.0,0.0 | 0.5,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,2.0,0.0,1.0,0.0,0.0 | 0.5,1.0
+
+# Test case 3: Zero input should give biases only
+# Input [0,0] -> Hidden [max(0,b1)] -> Output [b2]
+0.0,0.0 | 0.0,0.0,0.0,0.0,0.0,0.0,0.2,0.3,0.1,1.0,0.5,2.0,1.5,3.0,2.5,0.5,1.0 | 1.75,2.45

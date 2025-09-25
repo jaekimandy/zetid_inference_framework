@@ -1,0 +1,75 @@
+# Build directories
+build/
+build_tests/
+build_examples/
+build_android/
+build_ios/
+
+# Compiled binaries and executables
+*.exe
+*.out
+*.app
+*.so
+*.dylib
+*.dll
+*.a
+*.lib
+neural_interface_tests
+neural_interface_tests_android
+neural_interface_tests_ios
+neural_example
+neural_network_example
+
+# Object files
+*.o
+*.obj
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+!CMakeLists.txt
+!ios.toolchain.cmake
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Zip files (keep source, ignore built packages)
+*.zip
+
+# Platform-specific
+# Windows
+*.pdb
+*.ilk
+
+# macOS
+*.dSYM/
+
+# Android
+.gradle/
+local.properties
+*.apk
+*.aab
+
+# iOS
+*.ipa
+DerivedData/
+*.xcuserdata/
+*.xcworkspace/xcuserdata/
+
+# C++ specific
+*.gch
+*.pch

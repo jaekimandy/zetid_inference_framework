@@ -1,0 +1,16 @@
+# Linear Regression Demonstration Data
+# Format: input1,input2,input3 | parameters: w1,w2,w3,bias | expected_output
+
+# Simple test case
+1.5,-0.5,2.0 | 0.5,0.3,0.2,0.1 | 1.1
+
+# Zero input
+0.0,0.0,0.0 | 0.5,0.3,0.2,0.1 | 0.1
+
+# Unit inputs
+1.0,0.0,0.0 | 0.5,0.3,0.2,0.1 | 0.6
+0.0,1.0,0.0 | 0.5,0.3,0.2,0.1 | 0.4
+0.0,0.0,1.0 | 0.5,0.3,0.2,0.1 | 0.3
+
+# Negative inputs
+-1.0,2.0,-0.5 | 0.5,0.3,0.2,0.1 | 0.1

@@ -1,0 +1,11 @@
+# Multi-Class Classification Demo Data
+# Format: input1,input2,input3,input4 | class0_w0,class0_w1,class0_w2,class0_w3,class0_bias,class1_w0,class1_w1,class1_w2,class1_w3,class1_bias,class2_w0,class2_w1,class2_w2,class2_w3,class2_bias | expected_class0_prob,expected_class1_prob,expected_class2_prob
+
+# Test case 1: input=[1,0,0,0], class 0 should win (weight on feature 0)
+1.0,0.0,0.0,0.0 | 1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0 | 0.576,0.212,0.212
+
+# Test case 2: input=[0,1,0,0], class 1 should win (weight on feature 1)
+0.0,1.0,0.0,0.0 | 0.0,0.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0 | 0.212,0.576,0.212
+
+# Test case 3: input=[0,0,0,0], class 2 should win (bias only)
+0.0,0.0,0.0,0.0 | 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0 | 0.212,0.212,0.576

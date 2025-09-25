@@ -1,0 +1,17 @@
+# Logistic Regression Demonstration Data
+# Format: input1,input2 | parameters: w1,w2,bias | expected_output (sigmoid applied)
+
+# Positive linear combination -> high probability
+2.0,3.0 | 0.5,0.3,0.0 | 0.870
+
+# Negative linear combination -> low probability
+-2.0,-1.0 | 0.5,0.3,0.0 | 0.214
+
+# Zero linear combination -> 0.5 probability
+0.0,0.0 | 0.5,0.3,0.0 | 0.5
+
+# Small positive
+0.5,0.5 | 0.5,0.3,0.0 | 0.599
+
+# Small negative
+-0.5,-0.5 | 0.5,0.3,0.0 | 0.401
